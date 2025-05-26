@@ -241,15 +241,17 @@ class McpStreamableHttpClient(McpClient):
         if "mcp-session-id" in response.headers:
             self.session_id = response.headers.get("mcp-session-id")
         content_type = response.headers.get("content-type", "None")
+        message = {}
         if content_type == "text/event-stream":
             for sse in EventSource(response).iter_sse():
                 if sse.event != "message":
                     raise Exception(f"{self.name} - Unknown Server-Sent Event: {sse.event}")
-                return json.loads(sse.data)
+                message = json.loads(sse.data)
         elif content_type == "application/json":
-            return response.json() if response.content else {}
+            message = (response.json() if response.content else None) or {}
         else:
             raise Exception(f"{self.name} - Unsupported Content-Type: {content_type}")
+        return message
 
     def initialize(self):
         init_data = {
