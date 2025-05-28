@@ -254,12 +254,12 @@ class McpStreamableHttpClient(McpClient):
             return {}
         message = {}
         content_type = response.headers.get("content-type", "None")
-        if content_type == "text/event-stream":
+        if "text/event-stream" in content_type:
             for sse in EventSource(response).iter_sse():
                 if sse.event != "message":
                     raise Exception(f"{self.name} - Unknown Server-Sent Event: {sse.event}")
                 message = json.loads(sse.data)
-        elif content_type == "application/json":
+        elif "application/json" in content_type:
             message = (response.json() if response.content else None) or {}
         else:
             raise Exception(f"{self.name} - Unsupported Content-Type: {content_type}")
