@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 from collections.abc import Generator
@@ -34,8 +35,24 @@ class McpTool(Tool):
         mcp_clients = None
         try:
             mcp_clients = McpClients(servers_config)
-            result = mcp_clients.execute_tool(tool_name, arguments)
-            yield self.create_text_message(result)
+            content = mcp_clients.execute_tool(tool_name, arguments)
+            if len(content) == 1:
+                item = content[0]
+                if item["type"] == "text":
+                    yield self.create_text_message(item["text"])
+                elif item["type"] in ("image", "video"):
+                    blob = base64.b64decode(item["data"])
+                    meta = {
+                        "type": item["type"],
+                        "mime_type": item["mimeType"],
+                    }
+                    yield self.create_blob_message(blob=blob, meta=meta)
+                elif item["type"] == "resource":
+                    yield self.create_json_message(item["resource"])
+                else:
+                    yield self.create_json_message(item)
+            else:
+                yield self.create_json_message({"content": content})
         except Exception as e:
             error_msg = f"Error calling MCP Server tool: {str(e)}"
             logging.error(error_msg)
