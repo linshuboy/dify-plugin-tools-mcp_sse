@@ -22,7 +22,7 @@ parameters:
     human_description:
       en_US: Name of the tool to execute.
       zh_Hans: 要执行的工具的名称。
-    llm_description: Name of the tool to execute.
+    llm_description: Name of the MCP tool to execute.
     form: llm
   - name: arguments
     type: string
@@ -33,8 +33,30 @@ parameters:
     human_description:
       en_US: Tool arguments (JSON string in the python dict[str, Any] format).
       zh_Hans: 工具的参数。
-    llm_description: Tool arguments (JSON string in the python dict[str, Any] format).
+    llm_description: MCP Tool arguments (JSON string in the python dict[str, Any] format).
     form: llm
+  - name: resources_as_tools
+    type: boolean
+    required: true
+    default: true
+    label:
+      en_US: MCP Resources as Tools
+      zh_Hans: MCP 资源作为工具
+    human_description:
+      en_US: Fetch and call the preset MCP Resources as Tools.
+      zh_Hans: 将预设的 MCP Resources 作为 Tools 返回和调用。
+    form: form
+  - name: prompts_as_tools
+    type: boolean
+    required: true
+    default: true
+    label:
+      en_US: MCP Prompts as Tools
+      zh_Hans: MCP 提示词作为工具
+    human_description:
+      en_US: Fetch and call the preset MCP Prompts as Tools.
+      zh_Hans: 将预设的 MCP Prompts 作为 Tools 返回和调用。
+    form: form
   - name: servers_config
     type: string
     required: false

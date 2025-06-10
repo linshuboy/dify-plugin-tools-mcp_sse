@@ -32,9 +32,12 @@ class McpTool(Tool):
         except json.JSONDecodeError as e:
             raise ValueError(f"Arguments must be a valid JSON string: {e}")
 
+        resources_as_tools = tool_parameters.get("resources_as_tools", False)
+        prompts_as_tools = tool_parameters.get("prompts_as_tools", False)
+
         mcp_clients = None
         try:
-            mcp_clients = McpClients(servers_config)
+            mcp_clients = McpClients(servers_config, resources_as_tools, prompts_as_tools)
             content = mcp_clients.execute_tool(tool_name, arguments)
             if len(content) == 1:
                 item = content[0]

@@ -20,9 +20,12 @@ class McpTool(Tool):
         except json.JSONDecodeError as e:
             raise ValueError(f"servers_config must be a valid JSON string: {e}")
 
+        resources_as_tools = tool_parameters.get("resources_as_tools", False)
+        prompts_as_tools = tool_parameters.get("prompts_as_tools", False)
+
         mcp_clients = None
         try:
-            mcp_clients = McpClients(servers_config)
+            mcp_clients = McpClients(servers_config, resources_as_tools, prompts_as_tools)
             tools = mcp_clients.fetch_tools()
             prompt_tools = [to_prompt_tool(tool) for tool in tools]
             yield self.create_text_message(f"MCP Server tools list: \n{prompt_tools}")
@@ -41,6 +44,6 @@ def to_prompt_tool(tool: dict) -> dict[str, Any]:
     """
     return {
         "name": tool.get("name"),
-        "description": tool.get("description", None),
+        "description": tool.get("description", ""),
         "parameters": tool.get("inputSchema"),
     }
