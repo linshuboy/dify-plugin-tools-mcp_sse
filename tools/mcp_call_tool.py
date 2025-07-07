@@ -13,9 +13,10 @@ from utils.mcp_client import McpClients
 class McpTool(Tool):
 
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
+        # 优先使用运行时配置，如果没有则使用预授权配置
         servers_config_json = tool_parameters.get("servers_config") or self.runtime.credentials.get("servers_config")
         if not servers_config_json:
-            raise ValueError("Please fill in the servers_config")
+            raise ValueError("请提供 MCP 服务器配置：可以在插件授权时预设，或在使用工具时指定")
         try:
             servers_config = json.loads(servers_config_json)
         except json.JSONDecodeError as e:
