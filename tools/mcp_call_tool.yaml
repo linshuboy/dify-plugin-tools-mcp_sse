@@ -1,6 +1,6 @@
 identity:
   name: mcp_sse_call_tool
-  author: junjiem
+  author: linshuboy
   label:
     en_US: Call MCP Tool
     zh_Hans: 调用 MCP 工具
@@ -59,11 +59,11 @@ parameters:
     form: form
   - name: servers_config
     type: string
-    required: false
+    required: true
     label:
-      en_US: MCP Servers Config (Override)
-      zh_Hans: MCP 服务配置（覆盖）
+      en_US: MCP Servers Config
+      zh_Hans: MCP 服务配置
     human_description:
-      en_US: Override the default MCP servers config. If empty, uses the pre-configured default from plugin authorization. Support multiple MCP services.
-      zh_Hans: 覆盖默认的MCP服务配置。如为空，则使用插件授权时的预配置默认值。支持多个MCP服务。
-    form: llm
+      en_US: MCP servers configuration, support multiple MCP services. JSON format with server definitions.
+      zh_Hans: MCP服务配置，支持多个MCP服务。JSON格式的服务器定义。
+    form: form
